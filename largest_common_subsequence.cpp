@@ -4,7 +4,7 @@ using namespace std;
 
 using matrix = vector<vector<int>>;
 
-enum {TOP_LEFT, TOP, EMPTY};
+enum {TOP_LEFT, TOP, LEFT};
 
 pair<matrix, matrix> lcsLength(vector<int>& X, vector<int>& Y) {
     int m = X.size();
@@ -19,7 +19,7 @@ pair<matrix, matrix> lcsLength(vector<int>& X, vector<int>& Y) {
     }
     for(int i = 1; i <= m; ++i) {
         for(int j = 1; j <= n; ++j) {
-            if(X[i] == Y[j]) {
+            if(X[i - 1] == Y[j - 1]) {
                 c[i][j] = c[i - 1][j - 1] + 1;
                 b[i][j] = TOP_LEFT;
             }
@@ -29,7 +29,7 @@ pair<matrix, matrix> lcsLength(vector<int>& X, vector<int>& Y) {
             }
             else {
                 c[i][j] = c[i][j - 1];
-                b[i][j] = EMPTY;
+                b[i][j] = LEFT;
             }
         }
     }
@@ -42,7 +42,7 @@ void printLCS(matrix &b, vector<int>& X, int i, int j) {
     }
     if(b[i][j] == TOP_LEFT) {
         printLCS(b, X, i - 1, j - 1);
-        cout << X[i] << " ";
+        cout << X[i - 1] << " ";
     }
     else if(b[i][j] == TOP) {
         printLCS(b, X, i - 1, j);
@@ -53,5 +53,10 @@ void printLCS(matrix &b, vector<int>& X, int i, int j) {
 }
 
 int main() {
+    vector<int> A = {1, 2, 3, 2, 4, 1, 2};
+    vector<int> B = {2, 4, 3, 1, 2, 1};
+    auto [c, b] = lcsLength(A, B);
+    printLCS(b, A, A.size(), B.size());
+    cout << endl;
     return 0;
 }
